@@ -56,8 +56,8 @@ async function app() {
       BUSD.address,
       CLASS.address,
     ]); // estimate CLASS recieve from spending 5 BUSD
-    console.log(estimateCLASSReceive);
-    const minETHReceive = parseInt(
+    let estimate = ethers.utils.formatUnits(estimateCLASSReceive[1]);
+    const minCLASSReceive = parseInt(
       estimateCLASSReceive[1] - (estimateCLASSReceive[1] * slippage) / 100
     ); // set minimum CLASS receive
 
@@ -71,13 +71,13 @@ async function app() {
       "Swapping",
       ethers.utils.formatUnits(BUSDAmountToPay),
       "BUSD for ",
-      ethers.utils.formatUnits(minETHReceive),
+      estimate,
       "CLASS"
     );
     // swapping heppened here
     const buyTrx = await Router.swapExactTokensForTokens(
       BUSDAmountToPay.toString(),
-      minETHReceive.toString(),
+      minCLASSReceive.toString(),
       [BUSD.address, CLASS.address],
       wallet.address,
       deadline,

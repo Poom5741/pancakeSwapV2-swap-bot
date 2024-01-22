@@ -56,39 +56,38 @@ async function app() {
       BUSD.address,
       CLASS.address,
     ]); // estimate CLASS recieve from spending 5 BUSD
-    let estimate = estimateCLASSReceive[1]
-      .div(ethers.utils.parseUnits("1"))
-      .toNumber();
+    let estimate = ethers.utils.formatUnits(estimateCLASSReceive[1]);
 
-    const minETHReceive = parseInt(estimate - (estimate * slippage) / 100); // set minimum CLASS receive
-    console.log(minETHReceive);
+    const minCLASSReceive = parseInt(
+      estimateCLASSReceive[1] - (estimateCLASSReceive[1] * slippage) / 100
+    ); // set minimum CLASS receive
 
-    // // give an allowance to the Router when needed
-    // const BUSDAllowance = await BUSD.allowance(wallet.address, Router.address); // get allowance amount
-    // if (BUSDAllowance < BUSDAmountToPay) {
-    //   await BUSD.approve(Router.address, BUSDAmountToPay.toString(), gas); // grant Router ability to transfer BUSD out of our wallet
-    // }
+    // give an allowance to the Router when needed
+    const BUSDAllowance = await BUSD.allowance(wallet.address, Router.address); // get allowance amount
+    if (BUSDAllowance < BUSDAmountToPay) {
+      await BUSD.approve(Router.address, BUSDAmountToPay.toString(), gas); // grant Router ability to transfer BUSD out of our wallet
+    }
 
-    // console.log(
-    //   "Swapping",
-    //   ethers.utils.formatUnits(BUSDAmountToPay),
-    //   "BUSD for ",
-    //   ethers.utils.formatUnits(minETHReceive),
-    //   "CLASS"
-    // );
-    // // swapping heppened here
-    // const buyTrx = await Router.swapExactTokensForTokens(
-    //   BUSDAmountToPay.toString(),
-    //   minETHReceive.toString(),
-    //   [BUSD.address, CLASS.address],
-    //   wallet.address,
-    //   deadline,
-    //   gas
-    // );
+    console.log(
+      "Swapping",
+      ethers.utils.formatUnits(BUSDAmountToPay),
+      "BUSD for ",
+      estimate,
+      "CLASS"
+    );
+    // swapping heppened here
+    const buyTrx = await Router.swapExactTokensForTokens(
+      BUSDAmountToPay.toString(),
+      minCLASSReceive.toString(),
+      [BUSD.address, CLASS.address],
+      wallet.address,
+      deadline,
+      gas
+    );
 
-    // console.log("Transaction hash is:", buyTrx.hash);
-    // await buyTrx.wait(); // wait until transaction confirmed
-    // console.log("Transaction confirmed.");
+    console.log("Transaction hash is:", buyTrx.hash);
+    await buyTrx.wait(); // wait until transaction confirmed
+    console.log("Transaction confirmed.");
   }
 
   /************\

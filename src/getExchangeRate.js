@@ -8,8 +8,8 @@ async function app() {
 
   const addr = {
     Factory: "0xca143ce32fe78f1f7019d7d551a6402fc5350c73", // PancakeSwap V2 Factory
-    BTC: "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c", // BTCB contract address
-    BUSD: "0xe9e7cea3dedca5984780bafc599bd69add087d56", // BUSD contract address
+    BTC: "0xe57EDc546Ee99f17a5d6e32C2457B4569ecD40f8", // BTCB contract address
+    BUSD: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56", // BUSD contract address
   };
 
   // find a pair address from Factory contract
@@ -33,8 +33,8 @@ async function app() {
   );
 
   const reserves = await PairContract.getReserves(); // get reserves of tokens
-  const price = reserves[1] / reserves[0]; // price = BTC reserves / BUSD reserves
+  const price = reserves[0] / reserves[1]; // price = BTC reserves / BUSD reserves
 
-  console.log("1 BTC = ", price, " BUSD");
+  console.log("1 BUSD = ", price, " CLASS");
 }
 app();
